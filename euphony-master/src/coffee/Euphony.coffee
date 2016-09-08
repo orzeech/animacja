@@ -31,12 +31,14 @@ class Euphony
 
   initScene: ->
     @scene = new Scene('#canvas')
-    @scene.add(@keyboard.model)
+    #@scene.add(@keyboard.model)
     @scene.add(@rain.model)
     @scene.add(@particles.model)
-    @scene.add mdl for mdl in @guitar.geometry
+    console.log('addin')
+    @scene.add @guitar.geometry[mdl] for mdl in @guitar.parts_array
+        
     @scene.animate =>
-      @keyboard.update()
+      #@keyboard.update()
       @particles.update()
 
   initMidi: (callback) ->

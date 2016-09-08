@@ -45,7 +45,7 @@
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       context.fillStyle = gradient;
       context.fillRect(0, 0, width, height);
-      texture = new THREE.Texture(canvas, new THREE.UVMapping(), THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.NearestFilter, THREE.LinearMipMapLinearFilter);
+      texture = new THREE.Texture(canvas, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.NearestFilter, THREE.LinearMipMapLinearFilter);
       texture.needsUpdate = true;
       return texture;
     };

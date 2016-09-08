@@ -341,7 +341,7 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 
 
 			var reflectionCube;
-			var path = "file://C:/Users/Mariusz/Documents/AGH/animacja/env/";
+			var path = "file://C:/Users/Pajtel/Desktop/animacja-master/env/";
 			var format = '.png';
 			var urls = [
 					path + '0006' + format,
@@ -358,7 +358,7 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 
 			var texture = new THREE.Texture();
 			var texLoader = new THREE.ImageLoader();
-			texLoader.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/flamedMaple.jpg', function (image){
+			texLoader.load('file://C:/Users/Pajtel/Desktop/animacja-master/tex/flamedMaple.jpg', function (image){
 				texture.image = image;
             	texture.needsUpdate = true;
             	texture.mapping = "THREE.UVMapping";
@@ -367,7 +367,7 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 
 			var texture_neck =  new THREE.Texture();
 			var texLoader_neck = new THREE.ImageLoader();
-			texLoader_neck.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-neck.jpg', function (image){
+			texLoader_neck.load('file://C:/Users/Pajtel/Desktop/animacja-master/tex/LP-neck.jpg', function (image){
 				texture_neck.image = image;
             	texture_neck.needsUpdate = true;
             	texture_neck.mapping = "THREE.UVMapping";
@@ -376,7 +376,7 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 
 			var texture_bell = new THREE.Texture();
 			var texLoader_bell = new THREE.ImageLoader();
-			texLoader_bell.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-bell.jpg', function (image){
+			texLoader_bell.load('file://C:/Users/Pajtel/Desktop/animacja-master/tex/LP-bell.jpg', function (image){
 				texture_bell.image = image;
             	texture_bell.needsUpdate = true;
             	texture_bell.mapping = "THREE.UVMapping";
@@ -459,82 +459,82 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 				models: {
 					geoNut: {
 						id: 'geoNut',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/nut-LP.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/nut-LP.dae',
 						mat: matWhitePlastic
 					},
 					geoStrings: {
 						id: 'geoStrings',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strings.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/strings.dae',
 						mat: matStrings
 					},
 					geoPuBridge: {
 						id: 'geoPuBridge',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/pu01.dae',
 						mat: '',
 						position: [0, 0, 0.08]
 					},
 					geoRingBridge: {
 						id: 'geoRingBridge',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/ringHB.dae',
 						mat: ''
 					},
 					geoPuNeck: {
 						id: 'geoPuNeck',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/pu01.dae',
 						mat: '',
 						position: [10.46, 0, 0]
 					},
 					geoRingNeck: {
 						id: 'geoRingNeck',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/ringHB.dae',
 						mat: '',
 						position: [10.46, 0, 0]
 					},
 					geoBridge: {
 						id : 'geoBridge',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/TOM.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/TOM.dae',
 						mat: matChromeHw,
 						rotation: [0, -4.4, 0]
 					},
 					geoBody: {
 						id: 'geoBody',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/H0H.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/H0H.dae',
 						mat: matBody,
 						rotation: [0, -4.4, 0],
 						position: [0, 0, -0.85]
 					},
 					geoNeck: {
 						id: 'geoNeck',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP-neck.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/LP-neck.dae',
 						mat: ''
 					},
 					geoTuners: {
 						id: 'geoTuners',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/LP.dae',
 						mat: ''
 					},
 					geoKnob: {
 						id: 'geoKnob',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP1.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/LP1.dae',
 						mat: '',
 						rotation: [0, -4.4, 0],
 						position: [0, 0, -0.85]
 					},
 					geoSwitch: {
 						id: 'geoSwitch',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/sw3_01.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/sw3_01.dae',
 						mat: '',
 						rotation: [0, -4.4, 0],
 						position: [0, 0, -0.85]
 					},
 					geoTrussRodCover: {
 						id: 'geoTrussRodCover',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/bell.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/bell.dae',
 						mat: matBell
 					},
 					geoStrapPins: {
 						id: 'geoStrapPins',
-						file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strapPins.dae',
+						file: 'file://C:/Users/Pajtel/Desktop/animacja-master/model/strapPins.dae',
 						mat: matChromeHw,
 						rotation: [0, -4.4, 0],
 						position: [0, 0, -0.85]
@@ -765,7 +765,7 @@ required GPU features may prevent WebGL from running in some cases. (<a href="ht
 			// Custom Controls
 
 			function setDemoBody(wood) {
-				texLoader.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/' + wood + '.jpg', function (image){
+				texLoader.load('file://C:/Users/Pajtel/Desktop/animacja-master/tex/' + wood + '.jpg', function (image){
 					texture.image = image;
 	            	texture.needsUpdate = true;
 	            	render();

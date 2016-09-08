@@ -4,94 +4,100 @@
 
   Guitar = (function() {
     Guitar.prototype.loadGeo = function(model) {
-      var loader;
-      loader = new THREE.ColladaLoader;
+      var gtr, loader;
+      loader = new THREE.ColladaLoader();
+      gtr = this;
       loader.options.convertUpAxis = true;
+      console.log("loading geometry of " + model.id);
       loader.load(model.file, function(collada) {
-        geometry[model.id] = collada.scene;
+        this.app.guitar.geometry[model.id] = collada.scene;
+        console.log('added2 in guitar ' + this.app.guitar.geometry[model.id]);
         if (model.position !== void 0 && model.position !== '') {
-          geometry[model.id].position.set(model.position[0], model.position[1], model.position[2]);
+          this.app.guitar.geometry[model.id].position.set(model.position[0], model.position[1], model.position[2]);
         }
         if (model.rotation !== void 0 && model.rotation !== '') {
-          geometry[model.id].rotation.set(model.rotation[0] * Math.PI / 180, model.rotation[1] * Math.PI / 180, model.rotation[2] * Math.PI / 180);
+          this.app.guitar.geometry[model.id].rotation.set(model.rotation[0] * Math.PI / 180, model.rotation[1] * Math.PI / 180, model.rotation[2] * Math.PI / 180);
         }
         if (model.mat !== void 0 && model.mat !== '') {
-          setMaterial(geometry[model.id], model.mat);
+          gtr.setMaterial(this.app.guitar.geometry[model.id], model.mat, gtr);
         }
         if (model.id === 'geoNeck') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^fret/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matChromeHw);
+              gtr.setMaterial($(this)[0], gtr.matChromeHw, gtr);
             } else {
-              setMaterial($(this)[0], matNeck);
+              gtr.setMaterial($(this)[0], gtr.matNeck, gtr);
             }
           });
         }
         if (model.id === 'geoBridge' || model.id === 'geoStrings' || model.id === 'geoTuners') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^string/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matStrings);
+              gtr.setMaterial($(this)[0], gtr.matStrings, gtr);
             }
           });
         }
         if (model.id === 'geoKnob') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^transp/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matKnob1_transp);
+              gtr.setMaterial($(this)[0], gtr.matKnob1_transp, gtr);
             } else {
-              setMaterial($(this)[0], matKnob_gold);
+              gtr.setMaterial($(this)[0], gtr.matKnob_gold, gtr);
             }
           });
         }
         if (model.id === 'geoSwitch') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^hw/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matChromeHw);
+              gtr.setMaterial($(this)[0], gtr.matChromeHw, gtr);
             } else {
-              setMaterial($(this)[0], matWhitePlastic);
+              gtr.setMaterial($(this)[0], gtr.matWhitePlastic, gtr);
             }
           });
         }
         if (model.id === 'geoTuners') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^hw/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matChromeHw);
+              gtr.setMaterial($(this)[0], gtr.matChromeHw, gtr);
             } else if (/^string/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matStrings);
+              gtr.setMaterial($(this)[0], gtr.matStrings, gtr);
             } else {
-              setMaterial($(this)[0], matCreamPlastic);
+              gtr.setMaterial($(this)[0], gtr.matCreamPlastic, gtr);
             }
           });
         }
         if (model.id === 'geoTrussRodCover') {
-          $.each(geometry[model.id].children, function() {
+          $.each(this.app.guitar.geometry[model.id].children, function() {
             if (/^hw/.test($(this)[0].name)) {
-              setMaterial($(this)[0], matChromeHw);
+              gtr.setMaterial($(this)[0], gtr.matChromeHw, gtr);
             } else {
-              setMaterial($(this)[0], matBell);
+              gtr.setMaterial($(this)[0], gtr.matBell, gtr);
             }
           });
         }
         if (model.id === 'geoPuNeck' || model.id === 'geoPuBridge') {
-          geometry[model.id].getObjectByName('puPlastic1').children[0].material.setValues({
+          this.app.guitar.geometry[model.id].getObjectByName('puPlastic1').children[0].material.setValues({
             color: 0x000000
           });
         }
-        geometry[model.id].updateMatrix();
-        geometry[model.id].name = model.id;
+        this.app.guitar.geometry[model.id].updateMatrix();
+        this.app.guitar.geometry[model.id].name = model.id;
       });
     };
 
     Guitar.prototype.loadGeoMultiple = function(models) {
-      var j, len, model;
-      for (j = 0, len = models.length; j < len; j++) {
-        model = models[j];
-        this.loadGeo(model);
+      var j, len, part, ref;
+      console.log('in load geo multiple');
+      this.parts_array = ['geoNut', 'geoStrings', 'geoPuBridge', 'geoRingBridge', 'geoPuNeck', 'geoRingNeck', 'geoBridge', 'geoBody', 'geoNeck', 'geoTuners', 'geoKnob', 'geoSwitch', 'geoTrussRodCover', 'geoStrapPins'];
+      ref = this.parts_array;
+      for (j = 0, len = ref.length; j < len; j++) {
+        part = ref[j];
+        this.loadGeo(this.parts.models[part]);
       }
     };
 
     Guitar.prototype.setDemoBody = function(wood) {
-      texLoader.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/' + wood + '.jpg', function(image) {});
+      texLoader.load('tex/' + wood + '.jpg', function(image) {});
       texture.image = image;
       texture.needsUpdate = true;
       return;
@@ -126,40 +132,40 @@
     };
 
     Guitar.prototype.setDemoPuColor = function(puColor) {
-      geometry['geoPuNeck'].getObjectByName('puPlastic1').children[0].material.setValues({
+      this.geometry['geoPuNeck'].getObjectByName('puPlastic1').children[0].material.setValues({
         color: puColor
       });
-      geometry['geoPuBridge'].getObjectByName('puPlastic1').children[0].material.setValues({
+      this.geometry['geoPuBridge'].getObjectByName('puPlastic1').children[0].material.setValues({
         color: puColor
       });
     };
 
     function Guitar() {
-      var format, path, reflectionCube, texLoader, texLoader_bell, texLoader_neck, texture, texture_bell, texture_neck, urls;
+      var format, path, texLoader, texLoader_bell, texLoader_neck, texture, texture_bell, texture_neck, urls;
       this.geometry = {};
       this.reflectionCube = void 0;
-      path = 'file://C:/Users/Mariusz/Documents/AGH/animacja/env/';
+      path = 'env/';
       format = '.png';
       urls = [path + '0006' + format, path + '0005' + format, path + '0002' + format, path + '0001' + format, path + '0004' + format, path + '0003' + format];
-      reflectionCube = THREE.ImageUtils.loadTextureCube(urls);
-      reflectionCube.format = THREE.RGBFormat;
+      this.reflectionCube = THREE.ImageUtils.loadTextureCube(urls);
+      this.reflectionCube.format = THREE.RGBFormat;
       texture = new THREE.Texture;
       texLoader = new THREE.ImageLoader;
-      texLoader.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/flamedMaple.jpg', function(image) {
+      texLoader.load('tex/flamedMaple.jpg', function(image) {
         texture.image = image;
         texture.needsUpdate = true;
         texture.mapping = 'THREE.UVMapping';
       });
       texture_neck = new THREE.Texture;
       texLoader_neck = new THREE.ImageLoader;
-      texLoader_neck.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-neck.jpg', function(image) {
+      texLoader_neck.load('tex/LP-neck.jpg', function(image) {
         texture_neck.image = image;
         texture_neck.needsUpdate = true;
         texture_neck.mapping = 'THREE.UVMapping';
       });
       texture_bell = new THREE.Texture;
       texLoader_bell = new THREE.ImageLoader;
-      texLoader_bell.load('file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-bell.jpg', function(image) {
+      texLoader_bell.load('tex/LP-bell.jpg', function(image) {
         texture_bell.image = image;
         texture_bell.needsUpdate = true;
         texture_bell.mapping = 'THREE.UVMapping';
@@ -167,14 +173,14 @@
       this.matBody = new THREE.MeshPhongMaterial({
         shininess: 70,
         map: texture,
-        envMap: reflectionCube,
+        envMap: this.reflectionCube,
         combine: THREE.MixOperation,
         reflectivity: 0.15
       });
       this.matNeck = new THREE.MeshPhongMaterial({
         shininess: 70,
         map: texture_neck,
-        envMap: reflectionCube,
+        envMap: this.reflectionCube,
         combine: THREE.MixOperation,
         reflectivity: 0.15
       });
@@ -185,7 +191,7 @@
       this.matChromeHw = new THREE.MeshPhongMaterial({
         color: 0x000000,
         specular: 0xffffff,
-        envMap: reflectionCube,
+        envMap: this.reflectionCube,
         combine: THREE.AddOperation,
         shininess: 90
       });
@@ -202,7 +208,7 @@
       this.matGoldHw = new THREE.MeshPhongMaterial({
         color: 0xa3923c,
         specular: 0xe3c83e,
-        envMap: reflectionCube,
+        envMap: this.reflectionCube,
         combine: THREE.MultiplyOperation,
         shininess: 90
       });
@@ -222,7 +228,7 @@
       });
       this.matKnob1_transp = new THREE.MeshPhongMaterial({
         color: 0xc38500,
-        envMap: reflectionCube,
+        envMap: this.reflectionCube,
         combine: THREE.MixOperation,
         reflectivity: 1,
         opacity: 0.5,
@@ -232,82 +238,82 @@
         models: {
           geoNut: {
             id: 'geoNut',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/nut-LP.dae',
+            file: 'model/nut-LP.dae',
             mat: this.matWhitePlastic
           },
           geoStrings: {
             id: 'geoStrings',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strings.dae',
+            file: 'model/strings.dae',
             mat: this.matStrings
           },
           geoPuBridge: {
             id: 'geoPuBridge',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae',
+            file: 'model/pu01.dae',
             mat: '',
             position: [0, 0, 0.08]
           },
           geoRingBridge: {
             id: 'geoRingBridge',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae',
+            file: 'model/ringHB.dae',
             mat: ''
           },
           geoPuNeck: {
             id: 'geoPuNeck',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae',
+            file: 'model/pu01.dae',
             mat: '',
             position: [10.46, 0, 0]
           },
           geoRingNeck: {
             id: 'geoRingNeck',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae',
+            file: 'model/ringHB.dae',
             mat: '',
             position: [10.46, 0, 0]
           },
           geoBridge: {
             id: 'geoBridge',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/TOM.dae',
+            file: 'model/TOM.dae',
             mat: this.matChromeHw,
             rotation: [0, -4.4, 0]
           },
           geoBody: {
             id: 'geoBody',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/H0H.dae',
+            file: 'model/H0H.dae',
             mat: this.matBody,
             rotation: [0, -4.4, 0],
             position: [0, 0, -0.85]
           },
           geoNeck: {
             id: 'geoNeck',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP-neck.dae',
+            file: 'model/LP-neck.dae',
             mat: ''
           },
           geoTuners: {
             id: 'geoTuners',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP.dae',
+            file: 'model/LP.dae',
             mat: ''
           },
           geoKnob: {
             id: 'geoKnob',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP1.dae',
+            file: 'model/LP1.dae',
             mat: '',
             rotation: [0, -4.4, 0],
             position: [0, 0, -0.85]
           },
           geoSwitch: {
             id: 'geoSwitch',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/sw3_01.dae',
+            file: 'model/sw3_01.dae',
             mat: '',
             rotation: [0, -4.4, 0],
             position: [0, 0, -0.85]
           },
           geoTrussRodCover: {
             id: 'geoTrussRodCover',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/bell.dae',
+            file: 'model/bell.dae',
             mat: this.matBell
           },
           geoStrapPins: {
             id: 'geoStrapPins',
-            file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strapPins.dae',
+            file: 'model/strapPins.dae',
             mat: this.matChromeHw,
             rotation: [0, -4.4, 0],
             position: [0, 0, -0.85]
@@ -318,13 +324,13 @@
       this.loadGeoMultiple(this.parts.models);
     }
 
-    Guitar.prototype.setMaterial = function(node, material) {
+    Guitar.prototype.setMaterial = function(node, material, gtr) {
       var i;
       node.material = material;
       if (node.children) {
         i = 0;
         while (i < node.children.length) {
-          setMaterial(node.children[i], material);
+          gtr.setMaterial(node.children[i], material, gtr);
           i++;
         }
       }

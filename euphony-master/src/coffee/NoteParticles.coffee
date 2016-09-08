@@ -43,7 +43,7 @@ class NoteParticles
 
     texture = new THREE.Texture(
       canvas,
-      new THREE.UVMapping(),
+      THREE.UVMapping,
       THREE.ClampToEdgeWrapping,
       THREE.ClampToEdgeWrapping,
       THREE.NearestFilter,

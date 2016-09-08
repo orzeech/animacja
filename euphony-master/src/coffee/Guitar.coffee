@@ -2,73 +2,78 @@ class Guitar
 
   loadGeo: (model) ->
     # collada
-    loader = new (THREE.ColladaLoader)
+    loader = new THREE.ColladaLoader()
+    gtr = this
     loader.options.convertUpAxis = true
+    console.log "loading geometry of " + model.id
     loader.load model.file, (collada) ->
-      geometry[model.id] = collada.scene
+      @app.guitar.geometry[model.id] = collada.scene
+      console.log('added2 in guitar ' + @app.guitar.geometry[model.id])
       if model.position != undefined and model.position != ''
-        geometry[model.id].position.set model.position[0], model.position[1], model.position[2]
+        @app.guitar.geometry[model.id].position.set model.position[0], model.position[1], model.position[2]
       if model.rotation != undefined and model.rotation != ''
-        geometry[model.id].rotation.set model.rotation[0] * Math.PI / 180, model.rotation[1] * Math.PI / 180, model.rotation[2] * Math.PI / 180
+        @app.guitar.geometry[model.id].rotation.set model.rotation[0] * Math.PI / 180, model.rotation[1] * Math.PI / 180, model.rotation[2] * Math.PI / 180
       if model.mat != undefined and model.mat != ''
-        setMaterial geometry[model.id], model.mat
+        gtr.setMaterial @app.guitar.geometry[model.id], model.mat, gtr
       if model.id == 'geoNeck'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^fret/.test($(this)[0].name)
-            setMaterial $(this)[0], matChromeHw
+            gtr.setMaterial $(this)[0], gtr.matChromeHw, gtr
           else
-            setMaterial $(this)[0], matNeck
+            gtr.setMaterial $(this)[0], gtr.matNeck, gtr
           return
       if model.id == 'geoBridge' or model.id == 'geoStrings' or model.id == 'geoTuners'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^string/.test($(this)[0].name)
-            setMaterial $(this)[0], matStrings
+            gtr.setMaterial $(this)[0], gtr.matStrings, gtr
           return
       if model.id == 'geoKnob'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^transp/.test($(this)[0].name)
-            setMaterial $(this)[0], matKnob1_transp
+            gtr.setMaterial $(this)[0], gtr.matKnob1_transp, gtr
           else
-            setMaterial $(this)[0], matKnob_gold
+            gtr.setMaterial $(this)[0], gtr.matKnob_gold, gtr
           return
       if model.id == 'geoSwitch'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^hw/.test($(this)[0].name)
-            setMaterial $(this)[0], matChromeHw
+            gtr.setMaterial $(this)[0], gtr.matChromeHw, gtr
           else
-            setMaterial $(this)[0], matWhitePlastic
+            gtr.setMaterial $(this)[0], gtr.matWhitePlastic, gtr
           return
       if model.id == 'geoTuners'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^hw/.test($(this)[0].name)
-            setMaterial $(this)[0], matChromeHw
+            gtr.setMaterial $(this)[0], gtr.matChromeHw, gtr
           else if /^string/.test($(this)[0].name)
-            setMaterial $(this)[0], matStrings
+            gtr.setMaterial $(this)[0], gtr.matStrings, gtr
           else
-            setMaterial $(this)[0], matCreamPlastic
+            gtr.setMaterial $(this)[0], gtr.matCreamPlastic, gtr
           return
       if model.id == 'geoTrussRodCover'
-        $.each geometry[model.id].children, ->
+        $.each @app.guitar.geometry[model.id].children, ->
           if /^hw/.test($(this)[0].name)
-            setMaterial $(this)[0], matChromeHw
+            gtr.setMaterial $(this)[0], gtr.matChromeHw, gtr
           else
-            setMaterial $(this)[0], matBell
+            gtr.setMaterial $(this)[0], gtr.matBell, gtr
           return
       # Fix pickups
       if model.id == 'geoPuNeck' or model.id == 'geoPuBridge'
-        geometry[model.id].getObjectByName('puPlastic1').children[0].material.setValues color: 0x000000
-      geometry[model.id].updateMatrix()
-      geometry[model.id].name = model.id
+        @app.guitar.geometry[model.id].getObjectByName('puPlastic1').children[0].material.setValues color: 0x000000
+      @app.guitar.geometry[model.id].updateMatrix()
+      @app.guitar.geometry[model.id].name = model.id
       return
     return
 
   loadGeoMultiple: (models) ->
-    @loadGeo model for model in models
+    console.log 'in load geo multiple'
+    @parts_array = ['geoNut', 'geoStrings', 'geoPuBridge', 'geoRingBridge', 'geoPuNeck', 'geoRingNeck', 'geoBridge', 'geoBody', 'geoNeck', 'geoTuners', 'geoKnob', 'geoSwitch', 'geoTrussRodCover', 'geoStrapPins']
+    @loadGeo @parts.models[part] for part in @parts_array
     return
   # Custom Controls
 
   setDemoBody: (wood) ->
-    texLoader.load 'file://C:/Users/Mariusz/Documents/AGH/animacja/tex/' + wood + '.jpg', (image) ->
+    texLoader.load 'tex/' + wood + '.jpg', (image) ->
     texture.image = image
     texture.needsUpdate = true 
     return
@@ -99,15 +104,15 @@ class Guitar
     return
 
   setDemoPuColor: (puColor) ->
-    geometry['geoPuNeck'].getObjectByName('puPlastic1').children[0].material.setValues color: puColor
-    geometry['geoPuBridge'].getObjectByName('puPlastic1').children[0].material.setValues color: puColor
+    @geometry['geoPuNeck'].getObjectByName('puPlastic1').children[0].material.setValues color: puColor
+    @geometry['geoPuBridge'].getObjectByName('puPlastic1').children[0].material.setValues color: puColor
     return
 
     
   constructor: ->
     @geometry = {}
     @reflectionCube = undefined 
-    path = 'file://C:/Users/Mariusz/Documents/AGH/animacja/env/'
+    path = 'env/'
     format = '.png'
     urls = [
       path + '0006' + format
@@ -118,25 +123,25 @@ class Guitar
       path + '0003' + format
     ]
 
-    reflectionCube = THREE.ImageUtils.loadTextureCube(urls)
-    reflectionCube.format = THREE.RGBFormat
+    @reflectionCube = THREE.ImageUtils.loadTextureCube(urls)
+    @reflectionCube.format = THREE.RGBFormat
     texture = new (THREE.Texture)
     texLoader = new (THREE.ImageLoader)
-    texLoader.load 'file://C:/Users/Mariusz/Documents/AGH/animacja/tex/flamedMaple.jpg', (image) ->
+    texLoader.load 'tex/flamedMaple.jpg', (image) ->
       texture.image = image
       texture.needsUpdate = true
       texture.mapping = 'THREE.UVMapping'
       return
     texture_neck = new (THREE.Texture)
     texLoader_neck = new (THREE.ImageLoader)
-    texLoader_neck.load 'file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-neck.jpg', (image) ->
+    texLoader_neck.load 'tex/LP-neck.jpg', (image) ->
       texture_neck.image = image
       texture_neck.needsUpdate = true  
       texture_neck.mapping = 'THREE.UVMapping'
       return
     texture_bell = new (THREE.Texture)
     texLoader_bell = new (THREE.ImageLoader)
-    texLoader_bell.load 'file://C:/Users/Mariusz/Documents/AGH/animacja/tex/LP-bell.jpg', (image) ->
+    texLoader_bell.load 'tex/LP-bell.jpg', (image) ->
       texture_bell.image = image
       texture_bell.needsUpdate = true  
       texture_bell.mapping = 'THREE.UVMapping'
@@ -144,13 +149,13 @@ class Guitar
     @matBody = new (THREE.MeshPhongMaterial)(
       shininess: 70
       map: texture
-      envMap: reflectionCube
+      envMap: @reflectionCube
       combine: THREE.MixOperation
       reflectivity: 0.15)
     @matNeck = new (THREE.MeshPhongMaterial)(
       shininess: 70
       map: texture_neck
-      envMap: reflectionCube
+      envMap: @reflectionCube
       combine: THREE.MixOperation
       reflectivity: 0.15)
     @matBell = new (THREE.MeshPhongMaterial)(
@@ -159,7 +164,7 @@ class Guitar
     @matChromeHw = new (THREE.MeshPhongMaterial)(
       color: 0x000000
       specular: 0xffffff
-      envMap: reflectionCube
+      envMap: @reflectionCube
       combine: THREE.AddOperation
       shininess: 90)
     @matStrings = new (THREE.MeshPhongMaterial)(
@@ -173,7 +178,7 @@ class Guitar
     @matGoldHw = new (THREE.MeshPhongMaterial)(
       color: 0xa3923c
       specular: 0xe3c83e
-      envMap: reflectionCube
+      envMap: @reflectionCube
       combine: THREE.MultiplyOperation
       shininess: 90)
     @matBlackPlastic = new (THREE.MeshLambertMaterial)(color: 0x000000)
@@ -185,91 +190,90 @@ class Guitar
       shininess: 20)
     @matKnob1_transp = new (THREE.MeshPhongMaterial)(
       color: 0xc38500
-      envMap: reflectionCube
+      envMap: @reflectionCube
       combine: THREE.MixOperation
       reflectivity: 1
       opacity: 0.5
       transparent: true)
-
     @parts =
       models:
         geoNut:
           id: 'geoNut'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/nut-LP.dae'
+          file: 'model/nut-LP.dae'
           mat: @matWhitePlastic
         geoStrings:
           id: 'geoStrings'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strings.dae'
+          file: 'model/strings.dae'
           mat: @matStrings
         geoPuBridge:
           id: 'geoPuBridge'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae'
+          file: 'model/pu01.dae'
           mat: ''
           position: [0,  0, 0.08]
         geoRingBridge:
           id: 'geoRingBridge'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae'
+          file: 'model/ringHB.dae'
           mat: ''
         geoPuNeck:
           id: 'geoPuNeck'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/pu01.dae'
+          file: 'model/pu01.dae'
           mat: ''
           position: [10.46, 0, 0]
         geoRingNeck:
           id: 'geoRingNeck'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/ringHB.dae'
+          file: 'model/ringHB.dae'
           mat: ''
           position: [10.46, 0, 0]
         geoBridge:
           id: 'geoBridge'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/TOM.dae'
+          file: 'model/TOM.dae'
           mat: @matChromeHw
           rotation: [0, -4.4, 0]
         geoBody:
           id: 'geoBody'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/H0H.dae'
+          file: 'model/H0H.dae'
           mat: @matBody
           rotation: [0,-4.4,0]
           position: [0,0,-0.85]
         geoNeck:
           id: 'geoNeck'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP-neck.dae'
+          file: 'model/LP-neck.dae'
           mat: ''
         geoTuners:
           id: 'geoTuners'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP.dae'
+          file: 'model/LP.dae'
           mat: ''
         geoKnob:
           id: 'geoKnob'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/LP1.dae'
+          file: 'model/LP1.dae'
           mat: ''
           rotation: [0,-4.4,0]
           position: [0,0,-0.85]
         geoSwitch:
           id: 'geoSwitch'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/sw3_01.dae'
+          file: 'model/sw3_01.dae'
           mat: ''
           rotation: [0,-4.4,0]
           position: [0,0,-0.85]
         geoTrussRodCover:
           id: 'geoTrussRodCover'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/bell.dae'
+          file: 'model/bell.dae'
           mat: @matBell
         geoStrapPins:
           id: 'geoStrapPins'
-          file: 'file://C:/Users/Mariusz/Documents/AGH/animacja/model/strapPins.dae'
+          file: 'model/strapPins.dae'
           mat: @matChromeHw
           rotation: [0,-4.4,0]
           position: [0,0,-0.85]
       options: {}
     @loadGeoMultiple @parts.models
 
-  setMaterial: (node, material) ->
+  setMaterial: (node, material, gtr) ->
     node.material = material
     if node.children
       i = 0
       while i < node.children.length
-        setMaterial node.children[i], material
+        gtr.setMaterial node.children[i], material, gtr
         i++
     return
 

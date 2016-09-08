@@ -53,17 +53,16 @@
     Euphony.prototype.initScene = function() {
       var i, len, mdl, ref;
       this.scene = new Scene('#canvas');
-      this.scene.add(this.keyboard.model);
       this.scene.add(this.rain.model);
       this.scene.add(this.particles.model);
-      ref = this.guitar.geometry;
+      console.log('addin');
+      ref = this.guitar.parts_array;
       for (i = 0, len = ref.length; i < len; i++) {
         mdl = ref[i];
-        this.scene.add(mdl);
+        this.scene.add(this.guitar.geometry[mdl]);
       }
       return this.scene.animate((function(_this) {
         return function() {
-          _this.keyboard.update();
           return _this.particles.update();
         };
       })(this));
